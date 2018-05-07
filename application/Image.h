@@ -3,28 +3,36 @@
 
 namespace Application
 {
-using Byte = unsigned char;
+using Pixel = unsigned;
 
 class Image
 {
   public:
     Image();
-    Image(unsigned width, unsigned height, Byte* buffer = nullptr);
+    Image(unsigned width,
+          unsigned height,
+          unsigned depth,
+          Pixel* buffer = nullptr);
+
     Image(const Image& image);
     ~Image();
 
     unsigned getWidth() const { return m_width; }
     unsigned getHeight() const { return m_height; }
 
-    Byte* getBuffer();
+    unsigned getDepth() const { return m_depth; }
+
+    Pixel* getBuffer();
 
     bool isValid() const { return m_buffer; } 
+
+    Pixel at(unsigned row, unsigned column) const;
 
     class Row
     {
         friend class Image;
       public:
-        Byte& operator[](unsigned column);
+        Pixel& operator[](unsigned column);
 
       private:
         Row(Image& parent);
@@ -39,7 +47,8 @@ class Image
     Row m_row {*this};
     unsigned m_width {0};
     unsigned m_height {0};
-    Byte* m_buffer {nullptr};
+    unsigned m_depth {0};
+    Pixel* m_buffer {nullptr};
     bool m_isExternalBuffer {false};
 };
 }
